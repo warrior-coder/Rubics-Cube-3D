@@ -34,7 +34,7 @@
             width: 200px;
             height: 200px;
 
-            background-color: silver;
+            /* background-color: silver; */
             perspective: 500px;
         }
         .BIGCUBE {
@@ -42,7 +42,7 @@
             width: 200px;
             height: 200px;
             transform-origin: center;
-            background: #000;
+            background: rgba(0, 0, 0, 0.3);
             transform-style: preserve-3d;
         }
         .cube {
@@ -50,13 +50,15 @@
             width: 100px;
             height: 100px;
             transform-style: preserve-3d;
+            transform-origin: 100px 100px -100px;
+            transition: 1s;
         }
         .side {
             position: absolute;
             width: 100px;
             height: 100px;
-            border: 4px solid black;
-            font: normal 25px Arial;
+            border: 5px solid black;
+            font: normal 20px Arial;
             text-align: center;
             line-height: 100px;
         }
@@ -70,18 +72,18 @@
                 :style="{
                     transform:  'rotateX(' + cubeRotX + 'deg) rotateY(' + cubeRotY + 'deg) rotateZ(' + cubeRotZ + 'deg)',
                 }">
-                <div class="cube" v-for="cube in cubes"
+                <div class="cube" v-for="(cube, j) in cubes"
                     :style="{
-                        transform: 'translateX(' + cube.tranX + 'px) translateY(' + cube.tranY + 'px) translateZ(' + cube.tranZ + 'px)',
+                        transform: 'translateX(' + cube.translates[0] + 'px) translateY(' + cube.translates[1] + 'px) translateZ(' + cube.translates[2] + 'px) rotateX(' + cube.rotates[0] + 'deg) rotateY(' + cube.rotates[1] + 'deg) rotateZ(' + cube.rotates[2] + 'deg)',
+                        transformOrigin: cube.origins[0] + 'px ' + cube.origins[1] +'px ' + cube.origins[2] + 'px'
                     }">
 
-                    <div class="side" v-for="side in sides"
+                    <div class="side" v-for="(side, i) in sides"
                         :style="{
-                            transform:  'rotateX(' + side.rotX + 'deg) rotateY(' + side.rotY + 'deg) translateZ(' + side.tranZ + 'px)',
-                            color: side.color
+                            transform: 'translateX(' + side.tranX + 'px) translateY(' + side.tranY + 'px) translateZ(' + side.tranZ + 'px) rotateX(' + side.rotX + 'deg) rotateY(' + side.rotY + 'deg) rotateZ(' + side.rotZ + 'deg)',
+                            background: (cube.colors[i] == '-') ? '#000000' : cube.colors[i]
                         }">
-
-                        {{ side.name }}
+                        <!-- -{{ j }}- -->
                     </div>
                 </div>
 
@@ -92,18 +94,27 @@
 
     <script>
         const _SIDES = [
-            { name: 'front', color: 'lime', rotX: 0, rotY: 0, tranZ: 50 },
-            { name: 'back', color: 'blue', rotX: 0, rotY: 180, tranZ: 50 },
-            { name: 'left', color: 'orange', rotX: 0, rotY: -90, tranZ: 50 },
-            { name: 'right', color: 'red', rotX: 0, rotY: 90, tranZ: 50 },
-            { name: 'top', color: 'white', rotX: 90, rotY: 0, tranZ: 50 },
-            { name: 'bottom', color: 'yellow', rotX: -90, rotY: 0, tranZ: 50 }
+            { name: 'front', color: 'lime', rotX: 0, rotY: 0, rotZ: 0, tranX: 0, tranY: 0, tranZ: 0 },
+            { name: 'back', color: 'blue', rotX: 0, rotY: 180, rotZ: 0, tranX: 0, tranY: 0, tranZ: -100 },
+            { name: 'left', color: 'orange', rotX: 0, rotY: -90, rotZ: 0, tranX: -50, tranY: 0, tranZ: -50 },
+            { name: 'right', color: 'red', rotX: 0, rotY: 90, rotZ: 0, tranX: 50, tranY: 0, tranZ: -50 },
+            { name: 'top', color: 'white', rotX: 90, rotY: 0, rotZ: 0, tranX: 0, tranY: -50, tranZ: -50 },
+            { name: 'bottom', color: 'yellow', rotX: -90, rotY: 0, rotZ: 0, tranX: 0, tranY: 50, tranZ: -50 }
         ];
         const _CUBES = [
-            { tranX: 0, tranY: 0, tranZ: -50 },
-            { tranX: 100, tranY: 0, tranZ: -50 },
-            { tranX: 0, tranY: 0, tranZ: 50 },
-            { tranX: 100, tranY: 100, tranZ: 50 },
+            { translates: [0, 0, 0], rotates: [0, 0, 0,], colors: ['-','blue','orange','-','white','-'], origins: [100, 100, 0] },
+            { translates: [0, 0, 100], rotates: [0, 0, 0,], colors: ['lime','-','orange','-','white','-'], origins: [100, 100, -100] },
+            { translates: [100, 0, 0], rotates: [0, 0, 0,], colors: ['-','blue','-','red','white','-'], origins: [0, 100, 0] },
+            { translates: [100, 0, 100], rotates: [0, 0, 0,], colors: ['lime','-','-','red','white','-'], origins: [0, 100, -100] },
+            
+            { translates: [0, 100, 0], rotates: [0, 0, 0,], colors: ['-','blue','orange','-','-','yellow'], origins: [100, 0, 0] },
+            { translates: [0, 100, 100], rotates: [0, 0, 0,], colors: ['lime','-','orange','-','-','yellow'], origins: [100, 0, -100] },
+            { translates: [100, 100, 0], rotates: [0, 0, 0,], colors: ['-','blue','-','red','-','yellow'], origins: [0, 0, 0] },
+            { translates: [100, 100, 100], rotates: [0, 0, 0,], colors: ['lime','-','-','red','-','yellow'], origins: [0, 0, -100] },
+
+            // { tranX: 100, tranY: 0, tranZ: -50, rotX: 0, rotY: 0, rotZ: 0 },
+            // { tranX: 0, tranY: 0, tranZ: 50, rotX: 0, rotY: 0, rotZ: 0 },
+            // { tranX: 100, tranY: 100, tranZ: 50, rotX: 0, rotY: 0, rotZ: 0 },
         ];
 
         var ISIDE_VOID = false, ISIDE_CUBE = false, MOUSE_DOWN = false, mX0, mY0, rotX = 0, rotY = 0, rotZ = 0;
@@ -164,6 +175,18 @@
                         
                     }
                 },
+            },
+            mounted()
+            {
+                let deg = 0;
+                setInterval(() => {
+                    this.$set(this.cubes[2].rotates, 0, deg);
+                    this.$set(this.cubes[3].rotates, 0, deg);
+                    this.$set(this.cubes[6].rotates, 0, deg);
+                    this.$set(this.cubes[7].rotates, 0, deg);
+
+                    deg += 90;
+                }, 1000);
             }
         });
         // var SWIPE, mx0, my0, dmx, dmy, resx = 0, resy = 0;
