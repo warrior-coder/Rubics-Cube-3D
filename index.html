@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cube 3D VUE</title>
+    <title>---rotate 3d---</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -16,8 +16,9 @@
                 }">
                 <div class="cube" v-for="(cube, i) in cubes"
                     :style="{
-                        transform: 'translateX(' + cube.translates[0] + 'px) translateY(' + cube.translates[1] + 'px) translateZ(' + cube.translates[2] + 'px) rotateX(' + cube.rotates[0] + 'deg) rotateY(' + cube.rotates[1] + 'deg) rotateZ(' + cube.rotates[2] + 'deg)',
-                        transformOrigin: cube.origins[0] + 'px ' + cube.origins[1] +'px ' + cube.origins[2] + 'px'
+                        transform: 'translateX(' + cube.translates[0] + 'px) translateY(' + cube.translates[1] + 'px) translateZ(' + cube.translates[2] + 'px) rotate3d(' + cube.rotate3d.vector + ',' + cube.rotate3d.deg + 'deg)',
+                        transformOrigin: cube.origins[0] + 'px ' + cube.origins[1] +'px ' + cube.origins[2] + 'px',
+                        transition: cubeTransition + 's'
                     }">
 
                     <div class="side" v-for="(side, j) in sides"
@@ -25,7 +26,7 @@
                             transform: 'translateX(' + side.tranX + 'px) translateY(' + side.tranY + 'px) translateZ(' + side.tranZ + 'px) rotateX(' + side.rotX + 'deg) rotateY(' + side.rotY + 'deg) rotateZ(' + side.rotZ + 'deg)',
                             background: (cube.colors[j] == '-') ? '#000000' : cube.colors[j]
                         }">
-                        <!-- {{ i }} -->
+                        <!-- {{ j }} -->
                     </div>
                 </div>
 

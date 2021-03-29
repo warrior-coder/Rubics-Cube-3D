@@ -43,17 +43,18 @@ BODY {
     height: 100px;
     transform-style: preserve-3d;
     transform-origin: 100px 100px -100px;
-    transition: 1s;
+    /* transition: 1s; */
+    transition-timing-function: linear;
 }
 .cube__cover {
     position: absolute;
     width: 200px;
     height: 200px;
-    background: rgba(240, 3, 133, 0.3);
+    /* background: rgba(240, 3, 133, 0.3); */
+    opacity: 0;
     text-align: center;
     font: normal 20px Arial;
     color: magenta;
-    opacity: 0;
     line-height: 200px;
 }
 .side {
