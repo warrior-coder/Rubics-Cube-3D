@@ -17,15 +17,27 @@ const _COVERS = [
 ];
 
 const _CUBES = [
-    { translates: [0, 0, 0], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','orange','-','white','-'], origins: [100, 100, 0] },
-    { translates: [100, 0, 0], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','-','red','white','-'], origins: [0, 100, 0] },
-    { translates: [0, 0, 100], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','orange','-','white','-'], origins: [100, 100, -100] },
-    { translates: [100, 0, 100], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','-','red','white','-'], origins: [0, 100, -100] },
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','orange','-','white','-'] },
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','-','red','white','-']    },
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','orange','-','white','-'] },
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','-','red','white','-']    },
+
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','orange','-','-','yellow'] },
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','-','red','-','yellow']    },
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','orange','-','-','yellow'] },
+    { rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','-','red','-','yellow']    }
+];
+
+const _CUBES_POS = [
+    { translates: [0, 0, 0], origins: [100, 100, 0] },
+    { translates: [100, 0, 0], origins: [0, 100, 0] },
+    { translates: [0, 0, 100], origins: [100, 100, -100] },
+    { translates: [100, 0, 100], origins: [0, 100, -100] },
     
-    { translates: [0, 100, 0], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','orange','-','-','yellow'], origins: [100, 0, 0] },
-    { translates: [100, 100, 0], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['-','blue','-','red','-','yellow'], origins: [0, 0, 0] },
-    { translates: [0, 100, 100], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','orange','-','-','yellow'], origins: [100, 0, -100] },
-    { translates: [100, 100, 100], rotate3d: { vector: '0,0,0', deg: 0 }, colors: ['lime','-','-','red','-','yellow'], origins: [0, 0, -100] },
+    { translates: [0, 100, 0], origins: [100, 0, 0] },
+    { translates: [100, 100, 0], origins: [0, 0, 0] },
+    { translates: [0, 100, 100], origins: [100, 0, -100] },
+    { translates: [100, 100, 100], origins: [0, 0, -100] }
 ];
 
 var ISIDE_VOID = false, ISIDE_CUBE = false, MOUSE_DOWN = false, IS_ROTATING = false;
@@ -37,6 +49,7 @@ const VUE1 = new Vue({
     data: {
         sides: _SIDES,
         cubes: _CUBES,
+        cubes_pos: _CUBES_POS,
         rotatingCubes: [],
         rotatedCovers: [],
         covers: _COVERS,
@@ -103,15 +116,14 @@ const VUE1 = new Vue({
                 dX += (e.pageX - mX0);
                 dY += (e.pageY - mY0);
                 delay++;
-                if (delay > 10)
+                if (delay > 7)
                 {
                     IS_ROTATING = true;
                     this.cubeTransition  = .5;
 
                     switch (e0.target.innerText) 
                     {
-                        //----------TARGET-FRONT----------
-                        case 'front':
+                        case 'front': //----------TARGET-FRONT----------
                             if (Math.abs(dX) > Math.abs(dY))
                             {
                                 dir = (dX > 0) ? 1 : -1; 
@@ -127,7 +139,7 @@ const VUE1 = new Vue({
                             this.matrix = this.RotateMatrix3D(constDimension, 1, side_j, side_i, -dir);
                             this.RotateCube3D(vector, dir);
                         break;
-                        case 'back':
+                        case 'back': //----------TARGET-BACK----------
                             if (Math.abs(dX) > Math.abs(dY))
                             {
                                 dir = (dX > 0) ? 1 : -1; 
@@ -143,7 +155,7 @@ const VUE1 = new Vue({
                             this.matrix = this.RotateMatrix3D(constDimension, 1, 1-side_j, side_i, -dir);
                             this.RotateCube3D(vector, dir);
                         break;
-                        case 'left':
+                        case 'left': //----------TARGET-LEFT----------
                             if (Math.abs(dX) > Math.abs(dY))
                             {
                                 dir = (dX > 0) ? 1 : -1; 
@@ -159,7 +171,7 @@ const VUE1 = new Vue({
                             this.matrix = this.RotateMatrix3D(constDimension, side_j, 1, side_i, -dir);
                             this.RotateCube3D(vector, dir);
                         break;
-                        case 'right':
+                        case 'right': //----------TARGET-RIGHT----------
                             if (Math.abs(dX) > Math.abs(dY))
                             {
                                 dir = (dX > 0) ? 1 : -1; 
@@ -175,23 +187,104 @@ const VUE1 = new Vue({
                             this.matrix = this.RotateMatrix3D(constDimension, 1-side_j, 1, side_i, -dir);
                             this.RotateCube3D(vector, dir);
                         break;
-                        // case 'top':
-                        //     if (Math.abs(dX) > Math.abs(dY))
-                        //     {
-                        //         dir = (dY > 0) ? 1 : -1; 
-                        //         constDimension = 'i';
-                        //         vector = '0,0,1';
-                        //     }
-                        //     else
-                        //     {
-                                
-                        //         dir = (dX > 0) ? 1 : -1; 
-                        //         vector = '1,0,0';
-                        //         constDimension = 'j';
-                        //     }
-                        //     this.matrix = this.RotateMatrix3D(constDimension, 1-side_j, 1-side_i, 1, -dir);
-                        //     this.RotateCube3D(vector, dir);
-                        // break;
+                        case 'top': //----------TARGET-TOP----------
+                            if (Math.abs(dX) > Math.abs(dY))
+                            {
+                                dir = (dX > 0) ? 1 : -1; 
+                                constDimension = 'i';
+                                vector = '0,0,1';
+
+                                if (this.cubeRotY > -135 && this.cubeRotY < -45 || this.cubeRotY > 225 && this.cubeRotY < 315)
+                                {
+                                    vector = '1,0,0';
+                                    constDimension = 'j';
+                                }
+                                else if (this.cubeRotY > 45 && this.cubeRotY < 135 || this.cubeRotY > -315 && this.cubeRotY < -225)
+                                {
+                                    vector = '1,0,0';
+                                    constDimension = 'j';
+                                    dir *= -1;
+                                }
+                                else if (this.cubeRotY > -225 && this.cubeRotY < -135 || this.cubeRotY > 135 && this.cubeRotY < 225)
+                                {
+                                    dir *= -1;
+                                }
+                            }
+                            else
+                            {
+                                dir = (dY > 0) ? -1 : 1; 
+                                vector = '1,0,0';
+                                constDimension = 'j';
+
+                                if (this.cubeRotY > -135 && this.cubeRotY < -45 || this.cubeRotY > 225 && this.cubeRotY < 315)
+                                {
+                                    vector = '0,0,1';
+                                    constDimension = 'i';
+                                    dir *= -1;
+                                }
+                                else if (this.cubeRotY > 45 && this.cubeRotY < 135 || this.cubeRotY > -315 && this.cubeRotY < -225)
+                                {
+                                    vector = '0,0,1';
+                                    constDimension = 'i';
+                                }
+                                else if (this.cubeRotY > -225 && this.cubeRotY < -135 || this.cubeRotY > 135 && this.cubeRotY < 225)
+                                {
+                                    dir *= -1;
+                                }
+                            }
+                            
+                            this.matrix = this.RotateMatrix3D(constDimension, side_i, side_j, 1, -dir);
+                            this.RotateCube3D(vector, dir);
+                        break;
+                        case 'bottom': //----------TARGET-BOTTOM----------
+                        if (Math.abs(dX) > Math.abs(dY))
+                        {
+                            dir = (dX > 0) ? -1 : 1; 
+                            constDimension = 'i';
+                            vector = '0,0,1';
+
+                            if (this.cubeRotY > -135 && this.cubeRotY < -45 || this.cubeRotY > 225 && this.cubeRotY < 315)
+                                {
+                                    vector = '1,0,0';
+                                    constDimension = 'j';
+                                }
+                                else if (this.cubeRotY > 45 && this.cubeRotY < 135 || this.cubeRotY > -315 && this.cubeRotY < -225)
+                                {
+                                    vector = '1,0,0';
+                                    constDimension = 'j';
+                                    dir *= -1;
+                                }
+                                else if (this.cubeRotY > -225 && this.cubeRotY < -135 || this.cubeRotY > 135 && this.cubeRotY < 225)
+                                {
+                                    dir *= -1;
+                                }
+                            }
+                            else
+                            {
+                                dir = (dY > 0) ? -1 : 1; 
+                                vector = '1,0,0';
+                                constDimension = 'j';
+
+                                if (this.cubeRotY > -135 && this.cubeRotY < -45 || this.cubeRotY > 225 && this.cubeRotY < 315)
+                                {
+                                    vector = '0,0,1';
+                                    constDimension = 'i';
+                                    dir *= -1;
+                                }
+                                else if (this.cubeRotY > 45 && this.cubeRotY < 135 || this.cubeRotY > -315 && this.cubeRotY < -225)
+                                {
+                                    vector = '0,0,1';
+                                    constDimension = 'i';
+                                }
+                                else if (this.cubeRotY > -225 && this.cubeRotY < -135 || this.cubeRotY > 135 && this.cubeRotY < 225)
+                                {
+                                    dir *= -1;
+                                }
+                            }
+                            
+                            this.matrix = this.RotateMatrix3D(constDimension, 1-side_i, side_j, 1, -dir);
+                            this.RotateCube3D(vector, dir);
+                        break;
                         default:
                             console.log('OTHER');
                         break;

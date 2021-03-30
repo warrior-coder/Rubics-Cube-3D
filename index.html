@@ -16,8 +16,8 @@
                 }">
                 <div class="cube" v-for="(cube, i) in cubes"
                     :style="{
-                        transform: 'translateX(' + cube.translates[0] + 'px) translateY(' + cube.translates[1] + 'px) translateZ(' + cube.translates[2] + 'px) rotate3d(' + cube.rotate3d.vector + ',' + cube.rotate3d.deg + 'deg)',
-                        transformOrigin: cube.origins[0] + 'px ' + cube.origins[1] +'px ' + cube.origins[2] + 'px',
+                        transform: 'translateX(' + cubes_pos[i].translates[0] + 'px) translateY(' + cubes_pos[i].translates[1] + 'px) translateZ(' + cubes_pos[i].translates[2] + 'px) rotate3d(' + cube.rotate3d.vector + ',' + cube.rotate3d.deg + 'deg)',
+                        transformOrigin: cubes_pos[i].origins[0] + 'px ' + cubes_pos[i].origins[1] +'px ' + cubes_pos[i].origins[2] + 'px',
                         transition: cubeTransition + 's'
                     }">
 
@@ -40,6 +40,12 @@
                 
             </div>
         </div>
+    </div>
+
+    <div class="header">
+        <span class="header__title">
+            Rubic's Cube 3D
+        </span>
     </div>
 
     <script src="script.js"></script>
